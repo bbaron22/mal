@@ -1,5 +1,6 @@
 from collections.abc import Mapping
-from typing import Union, Callable, Optional, Iterator
+from typing import Union, Callable, Optional
+from operator import add, sub, mul, truediv
 
 
 class MalList(list):
@@ -30,12 +31,19 @@ MalType = Union[MalAtom, MalList]
 
 
 class MalEnv:
+    repl_env = {
+        '+': add,
+        '-': sub,
+        '*': mul,
+        '/': truediv
+    }
+
     data: dict[str, MalAtom]
     outer: Optional['MalEnv']
 
     def __init__(self, outer: 'MalEnv' = None):
         self.outer = outer
-        self.data = dict()
+        self.data = dict() if outer else dict(self.repl_env)
 
     def find(self, key) -> Optional['MalEnv']:
         if key in self.data:

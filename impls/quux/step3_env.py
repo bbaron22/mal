@@ -1,35 +1,26 @@
-from mal_types import MalType, MalSymbol, MalList, mal_list
+from mal_types import MalType, MalSymbol, MalList, mal_list, MalEnv
 from printer import pr_str
 from reader import read_str
-from operator import add, sub, mul, truediv
-from collections import ChainMap
-
-repl_env = ChainMap({
-    '+': add,
-    '-': sub,
-    '*': mul,
-    '/': truediv
-})
 
 
 def READ(s: str) -> MalType:
     return read_str(s)
 
 
-def EVAL(ast: MalType, env: ChainMap) -> MalType:
+def EVAL(ast: MalType, env: MalEnv) -> MalType:
     if not isinstance(ast, MalList):
         return eval_ast(ast, env)
     if len(ast) == 0:
         return ast
     arg0 = ast[0]
     if arg0 == 'def!':
-        env[ast[1]] = EVAL(ast[2], env)
-        return env[ast[1]]
+        env.set(ast[1], EVAL(ast[2], env))
+        return env.get(ast[1])
     elif arg0 == 'let*':
-        localEnv = env.new_child()
+        localEnv = MalEnv(env)
         bindings = ast[1]
         for i in range(0, len(bindings), 2):
-            localEnv[bindings[i]] = eval_ast(bindings[i + 1], localEnv)
+            localEnv.set(bindings[i], eval_ast(bindings[i + 1], localEnv))
         return EVAL(ast[2], localEnv)
     else:
         evaled = eval_ast(ast, env)
@@ -42,13 +33,16 @@ def PRINT(ast: MalType) -> str:
     return pr_str(ast)
 
 
+GLOBALS = MalEnv()
+
+
 def rep(s: str) -> str:
-    return PRINT(EVAL(READ(s), repl_env))
+    return PRINT(EVAL(READ(s), GLOBALS))
 
 
-def eval_ast(ast: MalType, env: ChainMap) -> MalType:
+def eval_ast(ast: MalType, env: MalEnv) -> MalType:
     if isinstance(ast, MalSymbol):
-        return env[ast]
+        return env.get(ast)
     if isinstance(ast, MalList):
         elems = [EVAL(elem, env) for elem in ast]
         return mal_list(ast, elems)
