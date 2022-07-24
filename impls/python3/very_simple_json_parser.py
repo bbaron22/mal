@@ -211,7 +211,9 @@ JSON_VALIDATION_ERROR_MESSAGE_TEMPLATE = """{message}
 
 def tests():
     import json
-
+    print(load_json_string('["abc", 1]'))
+    return
+    test0 = '"abc"'
     test1 = {
         'hi"': "there'",
         "foo": {
@@ -224,7 +226,7 @@ def tests():
     test2 = 'null'
     test3 = '"hi \"asdf\""'
 
-    for t in (test1, test2, test3):
+    for t in (test0, test1, test2, test3):
         s = json.dumps(t)
         print('Testing on input:', s)
         assert load_json_string(s) == json.loads(s), s
@@ -265,4 +267,4 @@ def timeit():
 
 if __name__ == '__main__':
     tests()
-    timeit()
+    # timeit()

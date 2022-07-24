@@ -1,7 +1,5 @@
 import sys
 import traceback
-import json
-json.load()
 
 import mal_readline
 
@@ -34,7 +32,6 @@ def main():
             print(rep(line))
         except Exception:
             print("".join(traceback.format_exception(*sys.exc_info())))
-
 
 
 if __name__ == '__main__':
