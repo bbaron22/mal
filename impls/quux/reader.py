@@ -1,6 +1,6 @@
 import re
 
-from mal_types import MalType, MalList, MalAtom, MalString, MalSymbol
+from mal_types import MalType, MalList, MalAtom, MalString, MalSymbol, MalNil, MalVector
 
 
 class Unbalanced(Exception):
@@ -38,16 +38,16 @@ class Reader:
     def read_form(self) -> MalType:
         begin = self.peek()
         if begin in BRACKETS:
-            return self.read_list(begin)
+            return self.read_seq(begin)
         else:
             return self.read_atom()
 
-    def read_list(self, begin) -> MalList:
+    def read_seq(self, begin) -> MalList:
         end = BRACKETS[begin]
-        mal_list = MalList(begin, end)
+        mal_seq = MalList() if begin == '(' else MalVector()
         while self.next() != end:
-            mal_list.append(self.read_form())
-        return mal_list
+            mal_seq.append(self.read_form())
+        return mal_seq
 
     def read_atom(self) -> MalAtom:
         tok = self.peek()
@@ -56,8 +56,15 @@ class Reader:
         except ValueError:
             if re.match(STRING_RE, tok):
                 une = _unescape(tok[1:-1])
-                print(f'tok: {tok} unescaped: {une}')
                 return MalString(une)
+            if tok[0] == ':':
+                return
+            if tok == "nil":
+                return MalNil
+            if tok == "false":
+                return False
+            if tok == "true":
+                return True
             return MalSymbol(tok)
 
 

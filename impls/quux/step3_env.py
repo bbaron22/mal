@@ -50,23 +50,24 @@ def eval_ast(ast: MalType, env: MalEnv) -> MalType:
 
 
 def main():
+    print('')
     # while True:
     #     line = input('user> ')
     #     print(rep(line))
 
-    lines = [
-        '(def! a 6)',
-        'a',
-        '(def! b (+ a 2))',
-        '(+ a b)',
-        '(+ 4 5)',
-        '(let* (c 2) c)',
-        '(let* (a 1 b 2) (+ a b))',
-        '(let* (a 1 b 2) (* (+ a b) (let* (a 1 b 2) (+ a b))))',
-
-    ]
-    for line in lines:
-        print(rep(line))
+    # lines = [
+    #     '(def! a 6)',
+    #     'a',
+    #     '(def! b (+ a 2))',
+    #     '(+ a b)',
+    #     '(+ 4 5)',
+    #     '(let* (c 2) c)',
+    #     '(let* (a 1 b 2) (+ a b))',
+    #     '(let* (a 1 b 2) (* (+ a b) (let* (a 1 b 2) (+ a b))))',
+    #
+    # ]
+    # for line in lines:
+    #     print(rep(line))
 
 
 if __name__ == '__main__':

@@ -1,17 +1,45 @@
 from collections.abc import Mapping
+from collections import UserList
 from typing import Union, Callable, Optional
-from operator import add, sub, mul, truediv
 
 
-class MalList(list):
-    def __init__(self, begin: str, end: str):
-        super().__init__()
+class MalSeq(UserList):
+    def __init__(self, begin, end, *args):
+        super().__init__(args)
         self.begin = begin
         self.end = end
 
 
+class MalList(MalSeq):
+
+    def __init__(self, *args):
+        super().__init__('(', ')', *args)
+
+    def rest(self) -> 'MalList':
+        return self[1:]
+
+    def get(self, index, default=None):
+        return self[index] if 0 <= index < len(self) else default
+
+    def last(self):
+        return self[-1]
+
+
+class MalVector(MalSeq):
+
+    def __init__(self, *args):
+        super().__init__('[', ']', *args)
+
+
 def mal_list(other: MalList, values: list) -> MalList:
-    ml = MalList(other.begin, other.end)
+    ml = MalList()
+    for value in values:
+        ml.append(value)
+    return ml
+
+
+def mal_vector(other: MalVector, values: list) -> MalVector:
+    ml = MalVector()
     for value in values:
         ml.append(value)
     return ml
@@ -25,25 +53,33 @@ class MalSymbol(str):
     pass
 
 
+def mal_keyword(s: str) -> MalString:
+    if s[0] == '\u029e':
+        return MalString(s)
+    return MalString('\u029e' + s)
+
+
 MalInt = int
-MalAtom = Union[MalInt, MalSymbol, MalString, Callable[..., 'MalType']]
+MalBool = bool
+MalNil = None
+MalAtom = Union[MalInt, MalSymbol, MalString, Callable[..., 'MalType'], MalBool, MalNil]
 MalType = Union[MalAtom, MalList]
 
 
 class MalEnv:
-    repl_env = {
-        '+': add,
-        '-': sub,
-        '*': mul,
-        '/': truediv
-    }
-
-    data: dict[str, MalAtom]
+    data: dict[MalSymbol, MalAtom]
     outer: Optional['MalEnv']
 
-    def __init__(self, outer: 'MalEnv' = None):
+    def __init__(self, outer: 'MalEnv' = None, binds=None, exprs=None):
         self.outer = outer
-        self.data = dict() if outer else dict(self.repl_env)
+        self.data = dict()
+        if binds is not None and exprs is not None:
+            for i in range(len(binds)):
+                if binds[i] == '&':
+                    self.set(binds[i + 1], exprs[i:])
+                    break
+                else:
+                    self.set(binds[i], exprs[i])
 
     def find(self, key) -> Optional['MalEnv']:
         if key in self.data:
@@ -58,7 +94,7 @@ class MalEnv:
             raise KeyError(key)
         return env.data[key]
 
-    def set(self, key: str, value: MalAtom):
+    def set(self, key: MalSymbol, value: MalAtom):
         self.data[key] = value
 
 
@@ -103,16 +139,10 @@ class FrozenDict(Mapping):
 
 
 def main():
-    outer = MalDict()
-    inner = MalDict(outer)
-    outer['a'] = 1
-    inner['b'] = 2
-    assert 'a' in inner
-    fd = FrozenDict({'a': 1, 'b': 2})
-    assert fd['a'] == 1
-    assert len(fd) == 2
-    for item in fd.items():
-        print(item)
+    L = MalList(1, 2)
+    print(L, L.begin, L.end)
+    V = MalVector(3, 4)
+    print(V, V.begin, L.end)
 
 
 if __name__ == '__main__':
