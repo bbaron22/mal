@@ -2,10 +2,12 @@ import sys
 import traceback
 
 import mal_readline
+import reader
+import printer
 
 
 def READ(s):
-    return s
+    return reader.read_str(s)
 
 
 def EVAL(ast, env):
@@ -13,7 +15,7 @@ def EVAL(ast, env):
 
 
 def PRINT(exp):
-    return exp
+    return printer.pr_str(exp)
 
 
 def rep(s):
@@ -34,5 +36,10 @@ def main():
             print("".join(traceback.format_exception(*sys.exc_info())))
 
 
+def t():
+    print(rep('^{"a" 1} [1 2 3]'))
+
+
 if __name__ == '__main__':
     main()
+    # t()
