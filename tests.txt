@@ -1,33 +1,58 @@
-/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step2_eval.py
-make[1]: Nothing to be done for `step2_eval.py'.
-(call STEP_TEST_FILES,python3,step2): impls/tests/step2_eval.mal
+/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step3_env.py
+make[1]: Nothing to be done for `step3_env.py'.
+(call STEP_TEST_FILES,python3,step3): impls/tests/step3_env.mal
 ----------------------------------------------
-Testing test^python3^step2; step file: impls/python3/step2_eval.py, test file: tests/step2_eval.mal
-Running: env STEP=step2_eval MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step2_eval.mal -- ../python3/run
-Testing evaluation of arithmetic operations
+Testing test^python3^step3; step file: impls/python3/step3_env.py, test file: tests/step3_env.mal
+Running: env STEP=step3_env MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step3_env.mal -- ../python3/run
+Testing REPL_ENV
 TEST: '(+ 1 2)' -> ['',3] -> SUCCESS
-TEST: '(+ 5 (* 2 3))' -> ['',11] -> SUCCESS
-TEST: '(- (+ 5 (* 2 3)) 3)' -> ['',8] -> SUCCESS
 TEST: '(/ (- (+ 5 (* 2 3)) 3) 4)' -> ['',2] -> SUCCESS
-TEST: '(/ (- (+ 515 (* 87 311)) 302) 27)' -> ['',1010] -> SUCCESS
-TEST: '(* -3 6)' -> ['',-18] -> SUCCESS
-TEST: '(/ (- (+ 515 (* -87 311)) 296) 27)' -> ['',-994] -> SUCCESS
-TEST: '(abc 1 2 3)' -> ['.+',] -> SUCCESS
-Testing empty list
-TEST: '()' -> ['',()] -> SUCCESS
+Testing def!
+TEST: '(def! x 3)' -> ['',3] -> SUCCESS
+TEST: 'x' -> ['',3] -> SUCCESS
+TEST: '(def! x 4)' -> ['',4] -> SUCCESS
+TEST: 'x' -> ['',4] -> SUCCESS
+TEST: '(def! y (+ 1 7))' -> ['',8] -> SUCCESS
+TEST: 'y' -> ['',8] -> SUCCESS
+Verifying symbols are case-sensitive
+TEST: '(def! mynum 111)' -> ['',111] -> SUCCESS
+TEST: '(def! MYNUM 222)' -> ['',222] -> SUCCESS
+TEST: 'mynum' -> ['',111] -> SUCCESS
+TEST: 'MYNUM' -> ['',222] -> SUCCESS
+Check env lookup non-fatal error
+TEST: '(abc 1 2 3)' -> [".*\\'?abc\\'? not found.*",] -> SUCCESS
+Check that error aborts def!
+TEST: '(def! w 123)' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! w (abc))' -> ['',] -> SUCCESS (result ignored)
+TEST: 'w' -> ['',123] -> SUCCESS
+Testing let*
+TEST: '(let* (z 9) z)' -> ['',9] -> SUCCESS
+TEST: '(let* (x 9) x)' -> ['',9] -> SUCCESS
+TEST: 'x' -> ['',4] -> SUCCESS
+TEST: '(let* (z (+ 2 3)) (+ 1 z))' -> ['',6] -> SUCCESS
+TEST: '(let* (p (+ 2 3) q (+ 2 p)) (+ p q))' -> ['',12] -> SUCCESS
+TEST: '(def! y (let* (z 7) z))' -> ['',] -> SUCCESS (result ignored)
+TEST: 'y' -> ['',7] -> SUCCESS
+Testing outer environment
+TEST: '(def! a 4)' -> ['',4] -> SUCCESS
+TEST: '(let* (q 9) q)' -> ['',9] -> SUCCESS
+TEST: '(let* (q 9) a)' -> ['',4] -> SUCCESS
+TEST: '(let* (z 2) (let* (q 9) a))' -> ['',4] -> SUCCESS
 
 -------- Deferrable Functionality --------
-Testing evaluation within collection literals
-TEST: '[1 2 (+ 1 2)]' -> ['',[1 2 3]] -> SUCCESS
-TEST: '{"a" (+ 7 8)}' -> ['',{"a" 15}] -> SUCCESS
-TEST: '{:a (+ 7 8)}' -> ['',{:a 15}] -> SUCCESS
-Check that evaluation hasn't broken empty collections
-TEST: '[]' -> ['',[]] -> SUCCESS
-TEST: '{}' -> ['',{}] -> SUCCESS
+Testing let* with vector bindings
+TEST: '(let* [z 9] z)' -> ['',9] -> SUCCESS
+TEST: '(let* [p (+ 2 3) q (+ 2 p)] (+ p q))' -> ['',12] -> SUCCESS
+Testing vector evaluation
+TEST: '(let* (a 5 b 6) [3 4 a [b 7] 8])' -> ['',[3 4 5 [6 7] 8]] -> SUCCESS
 
-TEST RESULTS (for ../tests/step2_eval.mal):
+-------- Optional Functionality --------
+Check that last assignment takes priority
+TEST: '(let* (x 2 x 3) x)' -> ['',3] -> SUCCESS
+
+TEST RESULTS (for ../tests/step3_env.mal):
     0: soft failing tests
     0: failing tests
-   14: passing tests
-   14: total tests
+   31: passing tests
+   31: total tests
 

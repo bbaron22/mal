@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Callable
 
 
 class MalStr(str):
@@ -40,8 +40,9 @@ class MalDict(dict):
 
 
 MalNil = None
+MalCallable = Callable[..., 'MalType']
 
-MalType = Union[MalStr, MalInt, MalSym, MalList, MalVector, MalDict, MalNil, MalBool, MalKeyword]
+MalType = Union[MalStr, MalInt, MalSym, MalList, MalVector, MalDict, MalNil, MalBool, MalKeyword, MalCallable]
 
 
 def is_seq(obj) -> bool:

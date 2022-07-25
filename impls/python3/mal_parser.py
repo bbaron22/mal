@@ -123,13 +123,15 @@ def parse_string(s: str, i: int) -> (MalStr, int):
 def parse_symbol(s: str, i: int) -> (MalSym, int):
     i0 = i
 
-    while i < len(s) and s[i] not in " \t\n\r\f\v":
+    while i < len(s) and s[i] not in " \t\n\r\f\v])}":
         if s[i] == '\\':
             i += 2  # Escaped character takes up two spaces.
         else:
             i += 1
-
-    python_string = bytes(s[i0:i], 'utf-8').decode('unicode-escape')
+    i1 = i
+    if i == len(s) or s[i] in ']})':
+        i -= 1
+    python_string = bytes(s[i0:i1], 'utf-8').decode('unicode-escape')
     return MalSym(python_string), skip_trailing_whitespace(s, i)
 
 
@@ -263,10 +265,8 @@ def tests():
         # 'nil',
         # '( + 2 (* 3 4) )',
         # test1
-        '-2',
-        '2',
-        '1234',
-        '-1234',
+        'a',
+        '(+ a b)'
     ]
 
     for t in strings:
