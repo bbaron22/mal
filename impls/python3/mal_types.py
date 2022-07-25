@@ -44,8 +44,16 @@ MalNil = None
 MalType = Union[MalStr, MalInt, MalSym, MalList, MalVector, MalDict, MalNil, MalBool, MalKeyword]
 
 
+def is_seq(obj) -> bool:
+    return is_list(obj) or is_vector(obj)
+
+
 def is_list(obj) -> bool:
     return isinstance(obj, MalList)
+
+
+def is_empty(obj: MalSeq) -> bool:
+    return len(obj) == 0
 
 
 def is_vector(obj) -> bool:
@@ -58,6 +66,10 @@ def is_dict(obj) -> bool:
 
 def is_keyword(obj) -> bool:
     return isinstance(obj, MalKeyword)
+
+
+def is_symbol(obj) -> bool:
+    return isinstance(obj, MalSym)
 
 
 def is_string(obj) -> bool:
@@ -80,5 +92,17 @@ def mk_list(*args) -> MalList:
     return MalList(args)
 
 
+def mk_vector(*args) -> MalVector:
+    return MalVector(args)
+
+
+def mk_seq(cls, *args) -> MalSeq:
+    return cls(args)
+
+
 def mk_symbol(s: str) -> MalSym:
     return MalSym(s)
+
+
+def mk_dict(*args) -> MalDict:
+    return MalDict(args)

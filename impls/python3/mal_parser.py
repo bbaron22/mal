@@ -67,7 +67,7 @@ def parse_mal(s: str, i: int) -> (MalType, int):
         return parse_true(s, i)
     elif first_char == 'f' and check_symbol(s, i, 'false'):
         return parse_false(s, i)
-    elif is_number_char(first_char):
+    elif is_number_token(s, i):
         return parse_number(s, i)
     else:
         return parse_symbol(s, i)
@@ -171,15 +171,25 @@ def is_number_char(char: str) -> bool:
     return '0' <= char <= '9'
 
 
-def parse_number(s: str, i: int) -> (MalInt, int):
-    validate_mal(s, i, condition=('0' <= s[i] <= '9'))
+def is_number_token(s: str, i: int) -> bool:
+    if is_number_char(s[i]):
+        return True
+    if s[i] == '-':
+        return i < len(s) - 1 and is_number_char(s[i + 1])
+    return False
 
-    j = next((j for j in range(i, len(s)) if not is_number_char(s[j])), len(s))
+
+def parse_number(s: str, i: int) -> (MalInt, int):
+    validate_mal(s, i, condition=(is_number_token(s, i)))
+    i0 = i
+    if s[i] == '-':
+        i0 += 1
+    j = next((j for j in range(i0, len(s)) if not is_number_char(s[j])), len(s))
 
     try:
-        return MalInt(s[i:j]), skip_leading_whitespace(s, j)
+        return MalInt(int(s[i:j])), skip_leading_whitespace(s, j)
     except ValueError:
-        raise_invalid_mal_error('Invalid JSON number:', s, i)
+        raise_invalid_mal_error('Invalid number:', s, i)
 
 
 _whitespace_matcher = re.compile(r'[\s,]*')
@@ -253,7 +263,10 @@ def tests():
         # 'nil',
         # '( + 2 (* 3 4) )',
         # test1
-        '(1 2'
+        '-2',
+        '2',
+        '1234',
+        '-1234',
     ]
 
     for t in strings:

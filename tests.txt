@@ -1,158 +1,33 @@
-/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step1_read_print.py
-make[1]: Nothing to be done for `step1_read_print.py'.
-(call STEP_TEST_FILES,python3,step1): impls/tests/step1_read_print.mal
+/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step2_eval.py
+make[1]: Nothing to be done for `step2_eval.py'.
+(call STEP_TEST_FILES,python3,step2): impls/tests/step2_eval.mal
 ----------------------------------------------
-Testing test^python3^step1; step file: impls/python3/step1_read_print.py, test file: tests/step1_read_print.mal
-Running: env STEP=step1_read_print MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step1_read_print.mal -- ../python3/run
-Testing read of numbers
-TEST: '1' -> ['',1] -> SUCCESS
-TEST: '7' -> ['',7] -> SUCCESS
-TEST: '  7   ' -> ['',7] -> SUCCESS
-TEST: '-123' -> ['',-123] -> SUCCESS
-Testing read of symbols
-TEST: '+' -> ['',+] -> SUCCESS
-TEST: 'abc' -> ['',abc] -> SUCCESS
-TEST: '   abc   ' -> ['',abc] -> SUCCESS
-TEST: 'abc5' -> ['',abc5] -> SUCCESS
-TEST: 'abc-def' -> ['',abc-def] -> SUCCESS
-Testing non-numbers starting with a dash.
-TEST: '-' -> ['',-] -> SUCCESS
-TEST: '-abc' -> ['',-abc] -> SUCCESS
-TEST: '->>' -> ['',->>] -> SUCCESS
-Testing read of lists
-TEST: '(+ 1 2)' -> ['',(+ 1 2)] -> SUCCESS
+Testing test^python3^step2; step file: impls/python3/step2_eval.py, test file: tests/step2_eval.mal
+Running: env STEP=step2_eval MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step2_eval.mal -- ../python3/run
+Testing evaluation of arithmetic operations
+TEST: '(+ 1 2)' -> ['',3] -> SUCCESS
+TEST: '(+ 5 (* 2 3))' -> ['',11] -> SUCCESS
+TEST: '(- (+ 5 (* 2 3)) 3)' -> ['',8] -> SUCCESS
+TEST: '(/ (- (+ 5 (* 2 3)) 3) 4)' -> ['',2] -> SUCCESS
+TEST: '(/ (- (+ 515 (* 87 311)) 302) 27)' -> ['',1010] -> SUCCESS
+TEST: '(* -3 6)' -> ['',-18] -> SUCCESS
+TEST: '(/ (- (+ 515 (* -87 311)) 296) 27)' -> ['',-994] -> SUCCESS
+TEST: '(abc 1 2 3)' -> ['.+',] -> SUCCESS
+Testing empty list
 TEST: '()' -> ['',()] -> SUCCESS
-TEST: '( )' -> ['',()] -> SUCCESS
-TEST: '(nil)' -> ['',(nil)] -> SUCCESS
-TEST: '((3 4))' -> ['',((3 4))] -> SUCCESS
-TEST: '(+ 1 (+ 2 3))' -> ['',(+ 1 (+ 2 3))] -> SUCCESS
-TEST: '  ( +   1   (+   2 3   )   )  ' -> ['',(+ 1 (+ 2 3))] -> SUCCESS
-TEST: '(* 1 2)' -> ['',(* 1 2)] -> SUCCESS
-TEST: '(** 1 2)' -> ['',(** 1 2)] -> SUCCESS
-TEST: '(* -3 6)' -> ['',(* -3 6)] -> SUCCESS
-TEST: '(()())' -> ['',(() ())] -> SUCCESS
-Test commas as whitespace
-TEST: '(1 2, 3,,,,),,' -> ['',(1 2 3)] -> SUCCESS
 
 -------- Deferrable Functionality --------
-Testing read of nil/true/false
-TEST: 'nil' -> ['',nil] -> SUCCESS
-TEST: 'true' -> ['',true] -> SUCCESS
-TEST: 'false' -> ['',false] -> SUCCESS
-Testing read of strings
-TEST: '"abc"' -> ['',"abc"] -> SUCCESS
-TEST: '   "abc"   ' -> ['',"abc"] -> SUCCESS
-TEST: '"abc (with parens)"' -> ['',"abc (with parens)"] -> SUCCESS
-TEST: '"abc\\"def"' -> ['',"abc\"def"] -> SUCCESS
-TEST: '""' -> ['',""] -> SUCCESS
-TEST: '"\\\\"' -> ['',"\\"] -> SUCCESS
-TEST: '"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"' -> ['',"\\\\\\\\\\\\\\\\\\"] -> SUCCESS
-TEST: '"&"' -> ['',"&"] -> SUCCESS
-TEST: '"\'"' -> ['',"'"] -> SUCCESS
-TEST: '"("' -> ['',"("] -> SUCCESS
-TEST: '")"' -> ['',")"] -> SUCCESS
-TEST: '"*"' -> ['',"*"] -> SUCCESS
-TEST: '"+"' -> ['',"+"] -> SUCCESS
-TEST: '","' -> ['',","] -> SUCCESS
-TEST: '"-"' -> ['',"-"] -> SUCCESS
-TEST: '"/"' -> ['',"/"] -> SUCCESS
-TEST: '":"' -> ['',":"] -> SUCCESS
-TEST: '";"' -> ['',";"] -> SUCCESS
-TEST: '"<"' -> ['',"<"] -> SUCCESS
-TEST: '"="' -> ['',"="] -> SUCCESS
-TEST: '">"' -> ['',">"] -> SUCCESS
-TEST: '"?"' -> ['',"?"] -> SUCCESS
-TEST: '"@"' -> ['',"@"] -> SUCCESS
-TEST: '"["' -> ['',"["] -> SUCCESS
-TEST: '"]"' -> ['',"]"] -> SUCCESS
-TEST: '"^"' -> ['',"^"] -> SUCCESS
-TEST: '"_"' -> ['',"_"] -> SUCCESS
-TEST: '"`"' -> ['',"`"] -> SUCCESS
-TEST: '"{"' -> ['',"{"] -> SUCCESS
-TEST: '"}"' -> ['',"}"] -> SUCCESS
-TEST: '"~"' -> ['',"~"] -> SUCCESS
-TEST: '"!"' -> ['',"!"] -> SUCCESS
-Testing reader errors
-TEST: '(1 2' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '[1 2' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '"abc' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '"' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '"\\"' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '(1 "abc' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-TEST: '(1 "abc"' -> ['.*(EOF|end of input|unbalanced).*',] -> SUCCESS
-Testing read of quoting
-TEST: "'1" -> ['',(quote 1)] -> SUCCESS
-TEST: "'(1 2 3)" -> ['',(quote (1 2 3))] -> SUCCESS
-TEST: '`1' -> ['',(quasiquote 1)] -> SUCCESS
-TEST: '`(1 2 3)' -> ['',(quasiquote (1 2 3))] -> SUCCESS
-TEST: '~1' -> ['',(unquote 1)] -> SUCCESS
-TEST: '~(1 2 3)' -> ['',(unquote (1 2 3))] -> SUCCESS
-TEST: '`(1 ~a 3)' -> ['',(quasiquote (1 (unquote a) 3))] -> SUCCESS
-TEST: '~@(1 2 3)' -> ['',(splice-unquote (1 2 3))] -> SUCCESS
-Testing keywords
-TEST: ':kw' -> ['',:kw] -> SUCCESS
-TEST: '(:kw1 :kw2 :kw3)' -> ['',(:kw1 :kw2 :kw3)] -> SUCCESS
-Testing read of vectors
-TEST: '[+ 1 2]' -> ['',[+ 1 2]] -> SUCCESS
+Testing evaluation within collection literals
+TEST: '[1 2 (+ 1 2)]' -> ['',[1 2 3]] -> SUCCESS
+TEST: '{"a" (+ 7 8)}' -> ['',{"a" 15}] -> SUCCESS
+TEST: '{:a (+ 7 8)}' -> ['',{:a 15}] -> SUCCESS
+Check that evaluation hasn't broken empty collections
 TEST: '[]' -> ['',[]] -> SUCCESS
-TEST: '[ ]' -> ['',[]] -> SUCCESS
-TEST: '[[3 4]]' -> ['',[[3 4]]] -> SUCCESS
-TEST: '[+ 1 [+ 2 3]]' -> ['',[+ 1 [+ 2 3]]] -> SUCCESS
-TEST: '  [ +   1   [+   2 3   ]   ]  ' -> ['',[+ 1 [+ 2 3]]] -> SUCCESS
-TEST: '([])' -> ['',([])] -> SUCCESS
-Testing read of hash maps
 TEST: '{}' -> ['',{}] -> SUCCESS
-TEST: '{ }' -> ['',{}] -> SUCCESS
-TEST: '{"abc" 1}' -> ['',{"abc" 1}] -> SUCCESS
-TEST: '{"a" {"b" 2}}' -> ['',{"a" {"b" 2}}] -> SUCCESS
-TEST: '{"a" {"b" {"c" 3}}}' -> ['',{"a" {"b" {"c" 3}}}] -> SUCCESS
-TEST: '{  "a"  {"b"   {  "cde"     3   }  }}' -> ['',{"a" {"b" {"cde" 3}}}] -> SUCCESS
-TEST: '{"a1" 1 "a2" 2 "a3" 3}' -> ['{"a([1-3])" \\1 "a(?!\\1)([1-3])" \\2 "a(?!\\1)(?!\\2)([1-3])" \\3}',] -> SUCCESS
-TEST: '{  :a  {:b   {  :cde     3   }  }}' -> ['',{:a {:b {:cde 3}}}] -> SUCCESS
-TEST: '{"1" 1}' -> ['',{"1" 1}] -> SUCCESS
-TEST: '({})' -> ['',({})] -> SUCCESS
-Testing read of comments
-TEST: ' ;; whole line comment (not an exception)' -> ['',] -> SUCCESS (result ignored)
-TEST: '1 ; comment after expression' -> ['',1] -> SUCCESS
-TEST: '1; comment after expression' -> ['',1] -> SUCCESS
-Testing read of @/deref
-TEST: '@a' -> ['',(deref a)] -> SUCCESS
 
--------- Optional Functionality --------
-Testing read of ^/metadata
-TEST: '^{"a" 1} [1 2 3]' -> ['',(with-meta [1 2 3] {"a" 1})] -> SOFT FAIL (line 243):
-    Expected : '.*\n\\(with\\-meta\\ \\[1\\ 2\\ 3\\]\\ \\{"a"\\ 1\\}\\)'
-    Got      : '^{"a" 1} [1 2 3]\n(with-meta {"a" 1} [1 2 3])'
-Non alphanumerice characters in strings
-TEST: '"\\n"' -> ['',"\n"] -> SUCCESS
-TEST: '"#"' -> ['',"#"] -> SUCCESS
-TEST: '"$"' -> ['',"$"] -> SUCCESS
-TEST: '"%"' -> ['',"%"] -> SUCCESS
-TEST: '"."' -> ['',"."] -> SUCCESS
-TEST: '"\\\\"' -> ['',"\\"] -> SUCCESS
-TEST: '"|"' -> ['',"|"] -> SUCCESS
-Non alphanumeric characters in comments
-TEST: '1;!' -> ['',1] -> SUCCESS
-TEST: '1;"' -> ['',1] -> SUCCESS
-TEST: '1;#' -> ['',1] -> SUCCESS
-TEST: '1;$' -> ['',1] -> SUCCESS
-TEST: '1;%' -> ['',1] -> SUCCESS
-TEST: "1;'" -> ['',1] -> SUCCESS
-TEST: '1;\\' -> ['',1] -> SUCCESS
-TEST: '1;\\\\' -> ['',1] -> SUCCESS
-TEST: '1;\\\\\\' -> ['',1] -> SUCCESS
-TEST: '1;`' -> ['',1] -> SUCCESS
-TEST: '1; &()*+,-./:;<=>?@[]^_{|}~' -> ['',1] -> SUCCESS
-
-FAILURES:
-SOFT FAILED TEST (line 243): ^{"a" 1} [1 2 3] -> ['',(with-meta [1 2 3] {"a" 1})]:
-    Expected : '.*\n\\(with\\-meta\\ \\[1\\ 2\\ 3\\]\\ \\{"a"\\ 1\\}\\)'
-    Got      : '^{"a" 1} [1 2 3]\n(with-meta {"a" 1} [1 2 3])'
-
-TEST RESULTS (for ../tests/step1_read_print.mal):
-    1: soft failing tests
+TEST RESULTS (for ../tests/step2_eval.mal):
+    0: soft failing tests
     0: failing tests
-  116: passing tests
-  117: total tests
+   14: passing tests
+   14: total tests
 
