@@ -108,3 +108,7 @@ def read_str(str):
     tokens = tokenize(str)
     if len(tokens) == 0: raise Blank("Blank Line")
     return read_form(Reader(tokens))
+
+if __name__ == '__main__':
+    x = read_str('; comment\n')
+    print(x)

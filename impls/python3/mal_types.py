@@ -23,6 +23,11 @@ class MalList(list):
     def rest(self) -> 'MalList':
         return MalList(self[1:])
 
+    def slice(self, a=None, b=None) -> 'MalList':
+        a = a or 0
+        b = b or len(self)
+        return MalList(self[a:b])
+
 
 class MalVector(list):
     pass
@@ -120,10 +125,6 @@ def mk_symbol(s: str) -> MalSym:
 
 def mk_dict(*args) -> MalDict:
     return MalDict(args)
-
-
-def is_callable(obj):
-    return callable(obj)
 
 
 def count(obj: MalSeq) -> int:

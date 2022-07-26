@@ -1,3 +1,4 @@
+import mal_function as funcs
 import mal_types as types
 
 
@@ -28,6 +29,6 @@ def pr_str(obj, print_readably=True):
         return "false"
     if types.is_nil(obj):
         return "nil"
-    if types.is_callable(obj):
+    if funcs.is_callable(obj):
         return "<#function>"
     return str(obj)
