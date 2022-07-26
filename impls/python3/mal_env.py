@@ -1,15 +1,28 @@
 from typing import Optional
 
-from mal_types import MalSym, MalType
+from mal_types import MalSym, MalType, MalList
+
+from typing import Sequence
 
 
 class Env:
-    data = dict[MalSym, MalType]
-    outer = Optional['Env']
+    data: dict[MalSym, MalType]
+    outer: Optional['Env']
 
-    def __init__(self, outer: 'Env' = None):
+    def __init__(self, outer: 'Env' = None,
+                 binds: Optional[Sequence[MalSym]] = None,
+                 exprs: Optional[Sequence[MalType]] = None):
         self.outer = outer
         self.data = dict()
+        binds = binds or []
+        exprs = exprs or []
+        if binds:
+            for i in range(len(binds)):
+                if binds[i] == '&':
+                    self.set(binds[i + 1], MalList(exprs[i:]))
+                    break
+                else:
+                    self.set(binds[i], exprs[i])
 
     def set(self, key: MalSym, value: MalType):
         self.data[key] = value

@@ -1,58 +1,223 @@
-/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step3_env.py
-make[1]: Nothing to be done for `step3_env.py'.
-(call STEP_TEST_FILES,python3,step3): impls/tests/step3_env.mal
+/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step4_if_fn_do.py
+make[1]: Nothing to be done for `step4_if_fn_do.py'.
+(call STEP_TEST_FILES,python3,step4): impls/tests/step4_if_fn_do.mal
 ----------------------------------------------
-Testing test^python3^step3; step file: impls/python3/step3_env.py, test file: tests/step3_env.mal
-Running: env STEP=step3_env MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step3_env.mal -- ../python3/run
-Testing REPL_ENV
+Testing test^python3^step4; step file: impls/python3/step4_if_fn_do.py, test file: tests/step4_if_fn_do.mal
+Running: env STEP=step4_if_fn_do MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step4_if_fn_do.mal -- ../python3/run
+-----------------------------------------------------
+Testing list functions
+TEST: '(list)' -> ['',()] -> SUCCESS
+TEST: '(list? (list))' -> ['',true] -> SUCCESS
+TEST: '(empty? (list))' -> ['',true] -> SUCCESS
+TEST: '(empty? (list 1))' -> ['',false] -> SUCCESS
+TEST: '(list 1 2 3)' -> ['',(1 2 3)] -> SUCCESS
+TEST: '(count (list 1 2 3))' -> ['',3] -> SUCCESS
+TEST: '(count (list))' -> ['',0] -> SUCCESS
+TEST: '(count nil)' -> ['',0] -> SUCCESS
+TEST: '(if (> (count (list 1 2 3)) 3) 89 78)' -> ['',78] -> SUCCESS
+TEST: '(if (>= (count (list 1 2 3)) 3) 89 78)' -> ['',89] -> SUCCESS
+Testing if form
+TEST: '(if true 7 8)' -> ['',7] -> SUCCESS
+TEST: '(if false 7 8)' -> ['',8] -> SUCCESS
+TEST: '(if false 7 false)' -> ['',false] -> SUCCESS
+TEST: '(if true (+ 1 7) (+ 1 8))' -> ['',8] -> SUCCESS
+TEST: '(if false (+ 1 7) (+ 1 8))' -> ['',9] -> SUCCESS
+TEST: '(if nil 7 8)' -> ['',8] -> SUCCESS
+TEST: '(if 0 7 8)' -> ['',7] -> SUCCESS
+TEST: '(if (list) 7 8)' -> ['',7] -> SUCCESS
+TEST: '(if (list 1 2 3) 7 8)' -> ['',7] -> SUCCESS
+TEST: '(= (list) nil)' -> ['',false] -> SUCCESS
+Testing 1-way if form
+TEST: '(if false (+ 1 7))' -> ['',nil] -> SUCCESS
+TEST: '(if nil 8)' -> ['',nil] -> SUCCESS
+TEST: '(if nil 8 7)' -> ['',7] -> SUCCESS
+TEST: '(if true (+ 1 7))' -> ['',8] -> SUCCESS
+Testing basic conditionals
+TEST: '(= 2 1)' -> ['',false] -> SUCCESS
+TEST: '(= 1 1)' -> ['',true] -> SUCCESS
+TEST: '(= 1 2)' -> ['',false] -> SUCCESS
+TEST: '(= 1 (+ 1 1))' -> ['',false] -> SUCCESS
+TEST: '(= 2 (+ 1 1))' -> ['',true] -> SUCCESS
+TEST: '(= nil 1)' -> ['',false] -> SUCCESS
+TEST: '(= nil nil)' -> ['',true] -> SUCCESS
+TEST: '(> 2 1)' -> ['',true] -> SUCCESS
+TEST: '(> 1 1)' -> ['',false] -> SUCCESS
+TEST: '(> 1 2)' -> ['',false] -> SUCCESS
+TEST: '(>= 2 1)' -> ['',true] -> SUCCESS
+TEST: '(>= 1 1)' -> ['',true] -> SUCCESS
+TEST: '(>= 1 2)' -> ['',false] -> SUCCESS
+TEST: '(< 2 1)' -> ['',false] -> SUCCESS
+TEST: '(< 1 1)' -> ['',false] -> SUCCESS
+TEST: '(< 1 2)' -> ['',true] -> SUCCESS
+TEST: '(<= 2 1)' -> ['',false] -> SUCCESS
+TEST: '(<= 1 1)' -> ['',true] -> SUCCESS
+TEST: '(<= 1 2)' -> ['',true] -> SUCCESS
+Testing equality
+TEST: '(= 1 1)' -> ['',true] -> SUCCESS
+TEST: '(= 0 0)' -> ['',true] -> SUCCESS
+TEST: '(= 1 0)' -> ['',false] -> SUCCESS
+TEST: '(= true true)' -> ['',true] -> SUCCESS
+TEST: '(= false false)' -> ['',true] -> SUCCESS
+TEST: '(= nil nil)' -> ['',true] -> SUCCESS
+TEST: '(= (list) (list))' -> ['',true] -> SUCCESS
+TEST: '(= (list) ())' -> ['',true] -> SUCCESS
+TEST: '(= (list 1 2) (list 1 2))' -> ['',true] -> SUCCESS
+TEST: '(= (list 1) (list))' -> ['',false] -> SUCCESS
+TEST: '(= (list) (list 1))' -> ['',false] -> SUCCESS
+TEST: '(= 0 (list))' -> ['',false] -> SUCCESS
+TEST: '(= (list) 0)' -> ['',false] -> SUCCESS
+TEST: '(= (list nil) (list))' -> ['',false] -> SUCCESS
+Testing builtin and user defined functions
 TEST: '(+ 1 2)' -> ['',3] -> SUCCESS
-TEST: '(/ (- (+ 5 (* 2 3)) 3) 4)' -> ['',2] -> SUCCESS
-Testing def!
-TEST: '(def! x 3)' -> ['',3] -> SUCCESS
-TEST: 'x' -> ['',3] -> SUCCESS
-TEST: '(def! x 4)' -> ['',4] -> SUCCESS
-TEST: 'x' -> ['',4] -> SUCCESS
-TEST: '(def! y (+ 1 7))' -> ['',8] -> SUCCESS
-TEST: 'y' -> ['',8] -> SUCCESS
-Verifying symbols are case-sensitive
-TEST: '(def! mynum 111)' -> ['',111] -> SUCCESS
-TEST: '(def! MYNUM 222)' -> ['',222] -> SUCCESS
-TEST: 'mynum' -> ['',111] -> SUCCESS
-TEST: 'MYNUM' -> ['',222] -> SUCCESS
-Check env lookup non-fatal error
-TEST: '(abc 1 2 3)' -> [".*\\'?abc\\'? not found.*",] -> SUCCESS
-Check that error aborts def!
-TEST: '(def! w 123)' -> ['',] -> SUCCESS (result ignored)
-TEST: '(def! w (abc))' -> ['',] -> SUCCESS (result ignored)
-TEST: 'w' -> ['',123] -> SUCCESS
-Testing let*
-TEST: '(let* (z 9) z)' -> ['',9] -> SUCCESS
-TEST: '(let* (x 9) x)' -> ['',9] -> SUCCESS
-TEST: 'x' -> ['',4] -> SUCCESS
-TEST: '(let* (z (+ 2 3)) (+ 1 z))' -> ['',6] -> SUCCESS
-TEST: '(let* (p (+ 2 3) q (+ 2 p)) (+ p q))' -> ['',12] -> SUCCESS
-TEST: '(def! y (let* (z 7) z))' -> ['',] -> SUCCESS (result ignored)
-TEST: 'y' -> ['',7] -> SUCCESS
-Testing outer environment
-TEST: '(def! a 4)' -> ['',4] -> SUCCESS
-TEST: '(let* (q 9) q)' -> ['',9] -> SUCCESS
-TEST: '(let* (q 9) a)' -> ['',4] -> SUCCESS
-TEST: '(let* (z 2) (let* (q 9) a))' -> ['',4] -> SUCCESS
+TEST: '( (fn* (a b) (+ b a)) 3 4)' -> ['',7] -> SUCCESS
+TEST: '( (fn* () 4) )' -> ['',4] -> SUCCESS
+TEST: '( (fn* (f x) (f x)) (fn* (a) (+ 1 a)) 7)' -> ['',8] -> SUCCESS
+Testing closures
+TEST: '( ( (fn* (a) (fn* (b) (+ a b))) 5) 7)' -> ['',12] -> SUCCESS
+TEST: '(def! gen-plus5 (fn* () (fn* (b) (+ 5 b))))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! plus5 (gen-plus5))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(plus5 7)' -> ['',12] -> SUCCESS
+TEST: '(def! gen-plusX (fn* (x) (fn* (b) (+ x b))))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! plus7 (gen-plusX 7))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(plus7 8)' -> ['',15] -> SUCCESS
+Testing do form
+TEST: '(do (prn 101))' -> ['101\n',nil] -> SUCCESS
+TEST: '(do (prn 102) 7)' -> ['102\n',7] -> SUCCESS
+TEST: '(do (prn 101) (prn 102) (+ 1 2))' -> ['101\n102\n',3] -> SUCCESS
+TEST: '(do (def! a 6) 7 (+ a 8))' -> ['',14] -> SUCCESS
+TEST: 'a' -> ['',6] -> SUCCESS
+Testing special form case-sensitivity
+TEST: '(def! DO (fn* (a) 7))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(DO 3)' -> ['',7] -> SUCCESS
+Testing recursive sumdown function
+TEST: '(def! sumdown (fn* (N) (if (> N 0) (+ N (sumdown  (- N 1))) 0)))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(sumdown 1)' -> ['',1] -> SUCCESS
+TEST: '(sumdown 2)' -> ['',3] -> SUCCESS
+TEST: '(sumdown 6)' -> ['',21] -> SUCCESS
+Testing recursive fibonacci function
+TEST: '(def! fib (fn* (N) (if (= N 0) 1 (if (= N 1) 1 (+ (fib (- N 1)) (fib (- N 2)))))))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(fib 1)' -> ['',1] -> SUCCESS
+TEST: '(fib 2)' -> ['',2] -> SUCCESS
+TEST: '(fib 4)' -> ['',5] -> SUCCESS
+Testing recursive function in environment.
+TEST: '(let* (f (fn* () x) x 3) (f))' -> ['',3] -> SUCCESS
+TEST: '(let* (cst (fn* (n) (if (= n 0) nil (cst (- n 1))))) (cst 1))' -> ['',nil] -> SUCCESS
+TEST: '(let* (f (fn* (n) (if (= n 0) 0 (g (- n 1)))) g (fn* (n) (f n))) (f 2))' -> ['',0] -> SUCCESS
 
 -------- Deferrable Functionality --------
-Testing let* with vector bindings
-TEST: '(let* [z 9] z)' -> ['',9] -> SUCCESS
-TEST: '(let* [p (+ 2 3) q (+ 2 p)] (+ p q))' -> ['',12] -> SUCCESS
-Testing vector evaluation
-TEST: '(let* (a 5 b 6) [3 4 a [b 7] 8])' -> ['',[3 4 5 [6 7] 8]] -> SUCCESS
+Testing if on strings
+TEST: '(if "" 7 8)' -> ['',7] -> SUCCESS
+Testing string equality
+TEST: '(= "" "")' -> ['',true] -> SUCCESS
+TEST: '(= "abc" "abc")' -> ['',true] -> SUCCESS
+TEST: '(= "abc" "")' -> ['',false] -> SUCCESS
+TEST: '(= "" "abc")' -> ['',false] -> SUCCESS
+TEST: '(= "abc" "def")' -> ['',false] -> SUCCESS
+TEST: '(= "abc" "ABC")' -> ['',false] -> SUCCESS
+TEST: '(= (list) "")' -> ['',false] -> SUCCESS
+TEST: '(= "" (list))' -> ['',false] -> SUCCESS
+Testing variable length arguments
+TEST: '( (fn* (& more) (count more)) 1 2 3)' -> ['',3] -> SUCCESS
+TEST: '( (fn* (& more) (list? more)) 1 2 3)' -> ['',true] -> SUCCESS
+TEST: '( (fn* (& more) (count more)) 1)' -> ['',1] -> SUCCESS
+TEST: '( (fn* (& more) (count more)) )' -> ['',0] -> SUCCESS
+TEST: '( (fn* (& more) (list? more)) )' -> ['',true] -> SUCCESS
+TEST: '( (fn* (a & more) (count more)) 1 2 3)' -> ['',2] -> SUCCESS
+TEST: '( (fn* (a & more) (count more)) 1)' -> ['',0] -> SUCCESS
+TEST: '( (fn* (a & more) (list? more)) 1)' -> ['',true] -> SUCCESS
+Testing language defined not function
+TEST: '(not false)' -> ['',true] -> SUCCESS
+TEST: '(not nil)' -> ['',true] -> SUCCESS
+TEST: '(not true)' -> ['',false] -> SUCCESS
+TEST: '(not "a")' -> ['',false] -> SUCCESS
+TEST: '(not 0)' -> ['',false] -> SUCCESS
+-----------------------------------------------------
+Testing string quoting
+TEST: '""' -> ['',""] -> SUCCESS
+TEST: '"abc"' -> ['',"abc"] -> SUCCESS
+TEST: '"abc  def"' -> ['',"abc  def"] -> SUCCESS
+TEST: '"\\""' -> ['',"\""] -> SUCCESS
+TEST: '"abc\\ndef\\nghi"' -> ['',"abc\ndef\nghi"] -> SUCCESS
+TEST: '"abc\\\\def\\\\ghi"' -> ['',"abc\\def\\ghi"] -> SUCCESS
+TEST: '"\\\\n"' -> ['',"\\n"] -> SUCCESS
+Testing pr-str
+TEST: '(pr-str)' -> ['',""] -> SUCCESS
+TEST: '(pr-str "")' -> ['',"\"\""] -> SUCCESS
+TEST: '(pr-str "abc")' -> ['',"\"abc\""] -> SUCCESS
+TEST: '(pr-str "abc  def" "ghi jkl")' -> ['',"\"abc  def\" \"ghi jkl\""] -> SUCCESS
+TEST: '(pr-str "\\"")' -> ['',"\"\\\"\""] -> SUCCESS
+TEST: '(pr-str (list 1 2 "abc" "\\"") "def")' -> ['',"(1 2 \"abc\" \"\\\"\") \"def\""] -> SUCCESS
+TEST: '(pr-str "abc\\ndef\\nghi")' -> ['',"\"abc\\ndef\\nghi\""] -> SUCCESS
+TEST: '(pr-str "abc\\\\def\\\\ghi")' -> ['',"\"abc\\\\def\\\\ghi\""] -> SUCCESS
+TEST: '(pr-str (list))' -> ['',"()"] -> SUCCESS
+Testing str
+TEST: '(str)' -> ['',""] -> SUCCESS
+TEST: '(str "")' -> ['',""] -> SUCCESS
+TEST: '(str "abc")' -> ['',"abc"] -> SUCCESS
+TEST: '(str "\\"")' -> ['',"\""] -> SUCCESS
+TEST: '(str 1 "abc" 3)' -> ['',"1abc3"] -> SUCCESS
+TEST: '(str "abc  def" "ghi jkl")' -> ['',"abc  defghi jkl"] -> SUCCESS
+TEST: '(str "abc\\ndef\\nghi")' -> ['',"abc\ndef\nghi"] -> SUCCESS
+TEST: '(str "abc\\\\def\\\\ghi")' -> ['',"abc\\def\\ghi"] -> SUCCESS
+TEST: '(str (list 1 2 "abc" "\\"") "def")' -> ['',"(1 2 abc \")def"] -> SUCCESS
+TEST: '(str (list))' -> ['',"()"] -> SUCCESS
+Testing prn
+TEST: '(prn)' -> ['\n',nil] -> SUCCESS
+TEST: '(prn "")' -> ['""\n',nil] -> SUCCESS
+TEST: '(prn "abc")' -> ['"abc"\n',nil] -> SUCCESS
+TEST: '(prn "abc  def" "ghi jkl")' -> ['"abc  def" "ghi jkl"',] -> SUCCESS
+TEST: '(prn "\\"")' -> ['"\\\\""\n',nil] -> SUCCESS
+TEST: '(prn "abc\\ndef\\nghi")' -> ['"abc\\\\ndef\\\\nghi"\n',nil] -> SUCCESS
+TEST: '(prn "abc\\\\def\\\\ghi")' -> ['"abc\\\\\\\\def\\\\\\\\ghi"',] -> SUCCESS
+TEST: 'nil' -> ['',] -> SUCCESS (result ignored)
+TEST: '(prn (list 1 2 "abc" "\\"") "def")' -> ['\\(1 2 "abc" "\\\\""\\) "def"\n',nil] -> SUCCESS
+Testing println
+TEST: '(println)' -> ['\n',nil] -> SUCCESS
+TEST: '(println "")' -> ['\n',nil] -> SUCCESS
+TEST: '(println "abc")' -> ['abc\n',nil] -> SUCCESS
+TEST: '(println "abc  def" "ghi jkl")' -> ['abc  def ghi jkl',] -> SUCCESS
+TEST: '(println "\\"")' -> ['"\n',nil] -> SUCCESS
+TEST: '(println "abc\\ndef\\nghi")' -> ['abc\ndef\nghi\n',nil] -> SUCCESS
+TEST: '(println "abc\\\\def\\\\ghi")' -> ['abc\\\\def\\\\ghi\n',nil] -> SUCCESS
+TEST: '(println (list 1 2 "abc" "\\"") "def")' -> ['\\(1 2 abc "\\) def\n',nil] -> SUCCESS
+Testing keywords
+TEST: '(= :abc :abc)' -> ['',true] -> SUCCESS
+TEST: '(= :abc :def)' -> ['',false] -> SUCCESS
+TEST: '(= :abc ":abc")' -> ['',false] -> SUCCESS
+TEST: '(= (list :abc) (list :abc))' -> ['',true] -> SUCCESS
+Testing vector truthiness
+TEST: '(if [] 7 8)' -> ['',7] -> SUCCESS
+Testing vector printing
+TEST: '(pr-str [1 2 "abc" "\\""] "def")' -> ['',"[1 2 \"abc\" \"\\\"\"] \"def\""] -> SUCCESS
+TEST: '(pr-str [])' -> ['',"[]"] -> SUCCESS
+TEST: '(str [1 2 "abc" "\\""] "def")' -> ['',"[1 2 abc \"]def"] -> SUCCESS
+TEST: '(str [])' -> ['',"[]"] -> SUCCESS
+Testing vector functions
+TEST: '(count [1 2 3])' -> ['',3] -> SUCCESS
+TEST: '(empty? [1 2 3])' -> ['',false] -> SUCCESS
+TEST: '(empty? [])' -> ['',true] -> SUCCESS
+TEST: '(list? [4 5 6])' -> ['',false] -> SUCCESS
+Testing vector equality
+TEST: '(= [] (list))' -> ['',true] -> SUCCESS
+TEST: '(= [7 8] [7 8])' -> ['',true] -> SUCCESS
+TEST: '(= [:abc] [:abc])' -> ['',true] -> SUCCESS
+TEST: '(= (list 1 2) [1 2])' -> ['',true] -> SUCCESS
+TEST: '(= (list 1) [])' -> ['',false] -> SUCCESS
+TEST: '(= [] [1])' -> ['',false] -> SUCCESS
+TEST: '(= 0 [])' -> ['',false] -> SUCCESS
+TEST: '(= [] 0)' -> ['',false] -> SUCCESS
+TEST: '(= [] "")' -> ['',false] -> SUCCESS
+TEST: '(= "" [])' -> ['',false] -> SUCCESS
+Testing vector parameter lists
+TEST: '( (fn* [] 4) )' -> ['',4] -> SUCCESS
+TEST: '( (fn* [f x] (f x)) (fn* [a] (+ 1 a)) 7)' -> ['',8] -> SUCCESS
+Nested vector/list equality
+TEST: '(= [(list)] (list []))' -> ['',true] -> SUCCESS
+TEST: '(= [1 2 (list 3 4 [5 6])] (list 1 2 [3 4 (list 5 6)]))' -> ['',true] -> SUCCESS
 
--------- Optional Functionality --------
-Check that last assignment takes priority
-TEST: '(let* (x 2 x 3) x)' -> ['',3] -> SUCCESS
-
-TEST RESULTS (for ../tests/step3_env.mal):
+TEST RESULTS (for ../tests/step4_if_fn_do.mal):
     0: soft failing tests
     0: failing tests
-   31: passing tests
-   31: total tests
+  178: passing tests
+  178: total tests
 

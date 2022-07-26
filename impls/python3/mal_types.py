@@ -20,6 +20,9 @@ class MalKeyword(str):
 class MalList(list):
     pass
 
+    def rest(self) -> 'MalList':
+        return MalList(self[1:])
+
 
 class MalVector(list):
     pass
@@ -89,6 +92,16 @@ def is_false(obj) -> bool:
     return obj is False
 
 
+def is_truthy(obj) -> bool:
+    if obj is True or obj is False:
+        return obj
+    return obj is not None
+
+
+def is_falsey(obj) -> bool:
+    return obj is None or obj is False
+
+
 def mk_list(*args) -> MalList:
     return MalList(args)
 
@@ -107,3 +120,33 @@ def mk_symbol(s: str) -> MalSym:
 
 def mk_dict(*args) -> MalDict:
     return MalDict(args)
+
+
+def is_callable(obj):
+    return callable(obj)
+
+
+def count(obj: MalSeq) -> int:
+    if obj is None:
+        return 0
+    return len(obj)
+
+
+def is_equal(a, b) -> bool:
+    return a == b
+
+
+def add(a: int, b: int) -> MalInt:
+    return MalInt(a + b)
+
+
+def sub(a: int, b: int) -> MalInt:
+    return MalInt(a - b)
+
+
+def mul(a: int, b: int) -> MalInt:
+    return MalInt(a * b)
+
+
+def truediv(a: int, b: int) -> MalInt:
+    return MalInt(a / b)

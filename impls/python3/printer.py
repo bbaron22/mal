@@ -17,7 +17,7 @@ def pr_str(obj, print_readably=True):
         return "{" + " ".join(ret) + "}"
     if types.is_keyword(obj):
         return f":{obj}"
-    if types.is_string(obj):
+    if types.is_string(obj) or isinstance(obj, str):
         if print_readably:
             return f'"{escape(obj)}"'
         else:
@@ -28,4 +28,6 @@ def pr_str(obj, print_readably=True):
         return "false"
     if types.is_nil(obj):
         return "nil"
+    if types.is_callable(obj):
+        return "<#function>"
     return str(obj)

@@ -76,15 +76,16 @@ for k, v in core.ns.items(): repl_env.set(types._symbol(k), v)
 REP("(def! not (fn* (a) (if a false true)))")
 
 # repl loop
-# while True:
-#     try:
-#         line = mal_readline.readline("user> ")
-#         if line == None: break
-#         if line == "": continue
-#         print(REP(line))
-#     except reader.Blank: continue
-#     except Exception as e:
-#         print("".join(traceback.format_exception(*sys.exc_info())))
-
 if __name__ == '__main__':
-    print(REP('(pr-str [1 2 "abc" "\\""] "def")'))
+    while True:
+        try:
+            line = mal_readline.readline("user> ")
+            if line == None: break
+            if line == "": continue
+            print(REP(line))
+        except reader.Blank: continue
+        except Exception as e:
+            print("".join(traceback.format_exception(*sys.exc_info())))
+
+# if __name__ == '__main__':
+#     print(REP('( (fn* (& more) (count more)) 1 2 3)'))
