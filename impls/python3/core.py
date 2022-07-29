@@ -1,6 +1,10 @@
 import operator as opers
+from functools import reduce
+
+import mal_atom as atom
 import mal_types as types
-import printer, reader, mal_atom as atom
+import printer
+import reader
 
 
 def _print(sep: str, readable: bool, *args) -> str:
@@ -30,6 +34,20 @@ def _slurp(filename: str) -> types.MalStr:
         return types.MalStr(f.read())
 
 
+def _vec(arg) -> types.MalVector:
+    return types.mk_vector(*arg)
+
+
+def _concat(*args) -> types.MalList:
+    if len(args) == 0:
+        return types.mk_list()
+    return types.mk_list(*reduce(lambda x, y: x + y, args))
+
+
+def _cons(x, xs) -> types.MalList:
+    return _concat([x], xs)
+
+
 ns = {
     "+": types.add,
     "-": types.sub,
@@ -55,8 +73,14 @@ ns = {
     "deref": atom.deref,
     "reset!": atom.reset,
     "swap!": atom.swap,
+    "vec": _vec,
+    "cons": _cons,
+    "concat": _concat,
+
 }
 
 if __name__ == '__main__':
-    contents = _slurp('/etc/passwd')
-    print(contents)
+    # print(type(_vec((1, 2, 3))))
+    # print(types.mk_list(1, 2, 3))
+    # print(_concat([1, 2], [3]))
+    print(_cons(1, [6, 7]))

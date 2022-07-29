@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Union, Callable
 
 
@@ -135,8 +134,18 @@ def count(obj: MalSeq) -> int:
     return len(obj)
 
 
+def is_mal_string_or_str(s):
+    return isinstance(s, (str, MalStr)) and not isinstance(s, (MalSym, MalKeyword))
+
+
 def is_equal(a, b) -> bool:
-    return a == b
+    if isinstance(a, str) and isinstance(b, str):
+        if is_mal_string_or_str(a) and is_mal_string_or_str(b):
+            return a == b
+        else:
+            return type(a) == type(b) and a == b
+    else:
+        return a == b
 
 
 def add(a: int, b: int) -> MalInt:
