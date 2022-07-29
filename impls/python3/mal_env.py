@@ -24,7 +24,8 @@ class Env:
                 else:
                     self.set(binds[i], exprs[i])
 
-    def set(self, key: MalSym, value: MalType):
+    def set(self, key: str, value: MalType):
+        key = key if isinstance(key, MalSym) else MalSym(key)
         self.data[key] = value
 
     def find(self, key: MalSym) -> Optional['Env']:

@@ -91,13 +91,15 @@ if len(sys.argv) >= 2:
     REP('(load-file "' + sys.argv[1] + '")')
     sys.exit(0)
 
-# repl loop
-while True:
-    try:
-        line = mal_readline.readline("user> ")
-        if line == None: break
-        if line == "": continue
-        print(REP(line))
-    except reader.Blank: continue
-    except Exception as e:
-        print("".join(traceback.format_exception(*sys.exc_info())))
+if __name__ == '__main__':
+
+    # repl loop
+    while True:
+        try:
+            line = mal_readline.readline("user> ")
+            if line == None: break
+            if line == "": continue
+            print(REP(line))
+        except reader.Blank: continue
+        except Exception as e:
+            print("".join(traceback.format_exception(*sys.exc_info())))

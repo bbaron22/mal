@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Union, Callable
 
 
@@ -50,7 +51,8 @@ class MalDict(dict):
 MalNil = None
 MalCallable = Callable[..., 'MalType']
 
-MalType = Union[MalStr, MalInt, MalSym, MalList, MalVector, MalDict, MalNil, MalBool, MalKeyword, MalCallable]
+MalType = Union[
+    MalStr, MalInt, MalSym, MalList, MalVector, MalDict, MalNil, MalBool, MalKeyword, MalCallable, 'MalAtom']
 
 
 def is_seq(obj) -> bool:

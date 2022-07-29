@@ -110,5 +110,5 @@ def read_str(str):
     return read_form(Reader(tokens))
 
 if __name__ == '__main__':
-    x = read_str('; comment\n')
+    x = read_str('(read-string "(1 2 (3 4) nil)")')
     print(x)

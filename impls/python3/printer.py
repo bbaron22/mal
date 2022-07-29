@@ -1,3 +1,4 @@
+import mal_atom as atom
 import mal_function as funcs
 import mal_types as types
 
@@ -18,6 +19,8 @@ def pr_str(obj, print_readably=True):
         return "{" + " ".join(ret) + "}"
     if types.is_keyword(obj):
         return f":{obj}"
+    if types.is_symbol(obj):
+        return obj
     if types.is_string(obj) or isinstance(obj, str):
         if print_readably:
             return f'"{escape(obj)}"'
@@ -31,4 +34,6 @@ def pr_str(obj, print_readably=True):
         return "nil"
     if funcs.is_callable(obj):
         return "<#function>"
+    if atom.is_atom(obj):
+        return f"(atom {pr_str(obj.val, pr)})"
     return str(obj)

@@ -1,223 +1,107 @@
-/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step4_if_fn_do.py
-make[1]: Nothing to be done for `step4_if_fn_do.py'.
-(call STEP_TEST_FILES,python3,step4): impls/tests/step4_if_fn_do.mal
+/Library/Developer/CommandLineTools/usr/bin/make -C impls/python3 step6_file.py
+make[1]: Nothing to be done for `step6_file.py'.
+(call STEP_TEST_FILES,python3,step6): impls/tests/step6_file.mal
 ----------------------------------------------
-Testing test^python3^step4; step file: impls/python3/step4_if_fn_do.py, test file: tests/step4_if_fn_do.mal
-Running: env STEP=step4_if_fn_do MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step4_if_fn_do.mal -- ../python3/run
------------------------------------------------------
-Testing list functions
-TEST: '(list)' -> ['',()] -> SUCCESS
-TEST: '(list? (list))' -> ['',true] -> SUCCESS
-TEST: '(empty? (list))' -> ['',true] -> SUCCESS
-TEST: '(empty? (list 1))' -> ['',false] -> SUCCESS
-TEST: '(list 1 2 3)' -> ['',(1 2 3)] -> SUCCESS
-TEST: '(count (list 1 2 3))' -> ['',3] -> SUCCESS
-TEST: '(count (list))' -> ['',0] -> SUCCESS
-TEST: '(count nil)' -> ['',0] -> SUCCESS
-TEST: '(if (> (count (list 1 2 3)) 3) 89 78)' -> ['',78] -> SUCCESS
-TEST: '(if (>= (count (list 1 2 3)) 3) 89 78)' -> ['',89] -> SUCCESS
-Testing if form
-TEST: '(if true 7 8)' -> ['',7] -> SUCCESS
-TEST: '(if false 7 8)' -> ['',8] -> SUCCESS
-TEST: '(if false 7 false)' -> ['',false] -> SUCCESS
-TEST: '(if true (+ 1 7) (+ 1 8))' -> ['',8] -> SUCCESS
-TEST: '(if false (+ 1 7) (+ 1 8))' -> ['',9] -> SUCCESS
-TEST: '(if nil 7 8)' -> ['',8] -> SUCCESS
-TEST: '(if 0 7 8)' -> ['',7] -> SUCCESS
-TEST: '(if (list) 7 8)' -> ['',7] -> SUCCESS
-TEST: '(if (list 1 2 3) 7 8)' -> ['',7] -> SUCCESS
-TEST: '(= (list) nil)' -> ['',false] -> SUCCESS
-Testing 1-way if form
-TEST: '(if false (+ 1 7))' -> ['',nil] -> SUCCESS
-TEST: '(if nil 8)' -> ['',nil] -> SUCCESS
-TEST: '(if nil 8 7)' -> ['',7] -> SUCCESS
-TEST: '(if true (+ 1 7))' -> ['',8] -> SUCCESS
-Testing basic conditionals
-TEST: '(= 2 1)' -> ['',false] -> SUCCESS
-TEST: '(= 1 1)' -> ['',true] -> SUCCESS
-TEST: '(= 1 2)' -> ['',false] -> SUCCESS
-TEST: '(= 1 (+ 1 1))' -> ['',false] -> SUCCESS
-TEST: '(= 2 (+ 1 1))' -> ['',true] -> SUCCESS
-TEST: '(= nil 1)' -> ['',false] -> SUCCESS
-TEST: '(= nil nil)' -> ['',true] -> SUCCESS
-TEST: '(> 2 1)' -> ['',true] -> SUCCESS
-TEST: '(> 1 1)' -> ['',false] -> SUCCESS
-TEST: '(> 1 2)' -> ['',false] -> SUCCESS
-TEST: '(>= 2 1)' -> ['',true] -> SUCCESS
-TEST: '(>= 1 1)' -> ['',true] -> SUCCESS
-TEST: '(>= 1 2)' -> ['',false] -> SUCCESS
-TEST: '(< 2 1)' -> ['',false] -> SUCCESS
-TEST: '(< 1 1)' -> ['',false] -> SUCCESS
-TEST: '(< 1 2)' -> ['',true] -> SUCCESS
-TEST: '(<= 2 1)' -> ['',false] -> SUCCESS
-TEST: '(<= 1 1)' -> ['',true] -> SUCCESS
-TEST: '(<= 1 2)' -> ['',true] -> SUCCESS
-Testing equality
-TEST: '(= 1 1)' -> ['',true] -> SUCCESS
-TEST: '(= 0 0)' -> ['',true] -> SUCCESS
-TEST: '(= 1 0)' -> ['',false] -> SUCCESS
-TEST: '(= true true)' -> ['',true] -> SUCCESS
-TEST: '(= false false)' -> ['',true] -> SUCCESS
-TEST: '(= nil nil)' -> ['',true] -> SUCCESS
-TEST: '(= (list) (list))' -> ['',true] -> SUCCESS
-TEST: '(= (list) ())' -> ['',true] -> SUCCESS
-TEST: '(= (list 1 2) (list 1 2))' -> ['',true] -> SUCCESS
-TEST: '(= (list 1) (list))' -> ['',false] -> SUCCESS
-TEST: '(= (list) (list 1))' -> ['',false] -> SUCCESS
-TEST: '(= 0 (list))' -> ['',false] -> SUCCESS
-TEST: '(= (list) 0)' -> ['',false] -> SUCCESS
-TEST: '(= (list nil) (list))' -> ['',false] -> SUCCESS
-Testing builtin and user defined functions
-TEST: '(+ 1 2)' -> ['',3] -> SUCCESS
-TEST: '( (fn* (a b) (+ b a)) 3 4)' -> ['',7] -> SUCCESS
-TEST: '( (fn* () 4) )' -> ['',4] -> SUCCESS
-TEST: '( (fn* (f x) (f x)) (fn* (a) (+ 1 a)) 7)' -> ['',8] -> SUCCESS
-Testing closures
-TEST: '( ( (fn* (a) (fn* (b) (+ a b))) 5) 7)' -> ['',12] -> SUCCESS
-TEST: '(def! gen-plus5 (fn* () (fn* (b) (+ 5 b))))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(def! plus5 (gen-plus5))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(plus5 7)' -> ['',12] -> SUCCESS
-TEST: '(def! gen-plusX (fn* (x) (fn* (b) (+ x b))))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(def! plus7 (gen-plusX 7))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(plus7 8)' -> ['',15] -> SUCCESS
-Testing do form
-TEST: '(do (prn 101))' -> ['101\n',nil] -> SUCCESS
-TEST: '(do (prn 102) 7)' -> ['102\n',7] -> SUCCESS
-TEST: '(do (prn 101) (prn 102) (+ 1 2))' -> ['101\n102\n',3] -> SUCCESS
-TEST: '(do (def! a 6) 7 (+ a 8))' -> ['',14] -> SUCCESS
-TEST: 'a' -> ['',6] -> SUCCESS
-Testing special form case-sensitivity
-TEST: '(def! DO (fn* (a) 7))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(DO 3)' -> ['',7] -> SUCCESS
-Testing recursive sumdown function
-TEST: '(def! sumdown (fn* (N) (if (> N 0) (+ N (sumdown  (- N 1))) 0)))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(sumdown 1)' -> ['',1] -> SUCCESS
-TEST: '(sumdown 2)' -> ['',3] -> SUCCESS
-TEST: '(sumdown 6)' -> ['',21] -> SUCCESS
-Testing recursive fibonacci function
-TEST: '(def! fib (fn* (N) (if (= N 0) 1 (if (= N 1) 1 (+ (fib (- N 1)) (fib (- N 2)))))))' -> ['',] -> SUCCESS (result ignored)
-TEST: '(fib 1)' -> ['',1] -> SUCCESS
-TEST: '(fib 2)' -> ['',2] -> SUCCESS
-TEST: '(fib 4)' -> ['',5] -> SUCCESS
-Testing recursive function in environment.
-TEST: '(let* (f (fn* () x) x 3) (f))' -> ['',3] -> SUCCESS
-TEST: '(let* (cst (fn* (n) (if (= n 0) nil (cst (- n 1))))) (cst 1))' -> ['',nil] -> SUCCESS
-TEST: '(let* (f (fn* (n) (if (= n 0) 0 (g (- n 1)))) g (fn* (n) (f n))) (f 2))' -> ['',0] -> SUCCESS
+Testing test^python3^step6; step file: impls/python3/step6_file.py, test file: tests/step6_file.mal
+Running: env STEP=step6_file MAL_IMPL=js ../../runtest.py  --deferrable --optional   ../tests/step6_file.mal -- ../python3/run
+
+Testing that (do (do)) not broken by TCO
+TEST: '(do (do 1 2))' -> ['',2] -> SUCCESS
+
+Testing read-string, eval and slurp
+TEST: '(read-string "(1 2 (3 4) nil)")' -> ['',(1 2 (3 4) nil)] -> SUCCESS
+TEST: '(= nil (read-string "nil"))' -> ['',true] -> SUCCESS
+TEST: '(read-string "(+ 2 3)")' -> ['',(+ 2 3)] -> SUCCESS
+TEST: '(read-string "\\"\\n\\"")' -> ['',"\n"] -> SUCCESS
+TEST: '(read-string "7 ;; comment")' -> ['',7] -> SUCCESS
+TEST: '(read-string ";; comment")' -> ['',] -> SUCCESS (result ignored)
+TEST: '(eval (read-string "(+ 2 3)"))' -> ['',5] -> SUCCESS
+TEST: '(slurp "../tests/test.txt")' -> ['',"A line of text\n"] -> SUCCESS
+TEST: '(slurp "../tests/test.txt")' -> ['',"A line of text\n"] -> SUCCESS
+Testing load-file
+TEST: '(load-file "../tests/inc.mal")' -> ['',nil] -> SUCCESS
+TEST: '(inc1 7)' -> ['',8] -> SUCCESS
+TEST: '(inc2 7)' -> ['',9] -> SUCCESS
+TEST: '(inc3 9)' -> ['',12] -> SUCCESS
+
+Testing atoms
+TEST: '(def! inc3 (fn* (a) (+ 3 a)))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! a (atom 2))' -> ['',(atom 2)] -> SUCCESS
+TEST: '(atom? a)' -> ['',true] -> SUCCESS
+TEST: '(atom? 1)' -> ['',false] -> SUCCESS
+TEST: '(deref a)' -> ['',2] -> SUCCESS
+TEST: '(reset! a 3)' -> ['',3] -> SUCCESS
+TEST: '(deref a)' -> ['',3] -> SUCCESS
+TEST: '(swap! a inc3)' -> ['',6] -> SUCCESS
+TEST: '(deref a)' -> ['',6] -> SUCCESS
+TEST: '(swap! a (fn* (a) a))' -> ['',6] -> SUCCESS
+TEST: '(swap! a (fn* (a) (* 2 a)))' -> ['',12] -> SUCCESS
+TEST: '(swap! a (fn* (a b) (* a b)) 10)' -> ['',120] -> SUCCESS
+TEST: '(swap! a + 3)' -> ['',123] -> SUCCESS
+Testing swap!/closure interaction
+TEST: '(def! inc-it (fn* (a) (+ 1 a)))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! atm (atom 7))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! f (fn* () (swap! atm inc-it)))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(f)' -> ['',8] -> SUCCESS
+TEST: '(f)' -> ['',9] -> SUCCESS
+Testing whether closures can retain atoms
+TEST: '(def! g (let* (atm (atom 0)) (fn* () (deref atm))))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(def! atm (atom 1))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(g)' -> ['',0] -> SUCCESS
 
 -------- Deferrable Functionality --------
-Testing if on strings
-TEST: '(if "" 7 8)' -> ['',7] -> SUCCESS
-Testing string equality
-TEST: '(= "" "")' -> ['',true] -> SUCCESS
-TEST: '(= "abc" "abc")' -> ['',true] -> SUCCESS
-TEST: '(= "abc" "")' -> ['',false] -> SUCCESS
-TEST: '(= "" "abc")' -> ['',false] -> SUCCESS
-TEST: '(= "abc" "def")' -> ['',false] -> SUCCESS
-TEST: '(= "abc" "ABC")' -> ['',false] -> SUCCESS
-TEST: '(= (list) "")' -> ['',false] -> SUCCESS
-TEST: '(= "" (list))' -> ['',false] -> SUCCESS
-Testing variable length arguments
-TEST: '( (fn* (& more) (count more)) 1 2 3)' -> ['',3] -> SUCCESS
-TEST: '( (fn* (& more) (list? more)) 1 2 3)' -> ['',true] -> SUCCESS
-TEST: '( (fn* (& more) (count more)) 1)' -> ['',1] -> SUCCESS
-TEST: '( (fn* (& more) (count more)) )' -> ['',0] -> SUCCESS
-TEST: '( (fn* (& more) (list? more)) )' -> ['',true] -> SUCCESS
-TEST: '( (fn* (a & more) (count more)) 1 2 3)' -> ['',2] -> SUCCESS
-TEST: '( (fn* (a & more) (count more)) 1)' -> ['',0] -> SUCCESS
-TEST: '( (fn* (a & more) (list? more)) 1)' -> ['',true] -> SUCCESS
-Testing language defined not function
-TEST: '(not false)' -> ['',true] -> SUCCESS
-TEST: '(not nil)' -> ['',true] -> SUCCESS
-TEST: '(not true)' -> ['',false] -> SUCCESS
-TEST: '(not "a")' -> ['',false] -> SUCCESS
-TEST: '(not 0)' -> ['',false] -> SUCCESS
------------------------------------------------------
-Testing string quoting
-TEST: '""' -> ['',""] -> SUCCESS
-TEST: '"abc"' -> ['',"abc"] -> SUCCESS
-TEST: '"abc  def"' -> ['',"abc  def"] -> SUCCESS
-TEST: '"\\""' -> ['',"\""] -> SUCCESS
-TEST: '"abc\\ndef\\nghi"' -> ['',"abc\ndef\nghi"] -> SUCCESS
-TEST: '"abc\\\\def\\\\ghi"' -> ['',"abc\\def\\ghi"] -> SUCCESS
-TEST: '"\\\\n"' -> ['',"\\n"] -> SUCCESS
-Testing pr-str
-TEST: '(pr-str)' -> ['',""] -> SUCCESS
-TEST: '(pr-str "")' -> ['',"\"\""] -> SUCCESS
-TEST: '(pr-str "abc")' -> ['',"\"abc\""] -> SUCCESS
-TEST: '(pr-str "abc  def" "ghi jkl")' -> ['',"\"abc  def\" \"ghi jkl\""] -> SUCCESS
-TEST: '(pr-str "\\"")' -> ['',"\"\\\"\""] -> SUCCESS
-TEST: '(pr-str (list 1 2 "abc" "\\"") "def")' -> ['',"(1 2 \"abc\" \"\\\"\") \"def\""] -> SUCCESS
-TEST: '(pr-str "abc\\ndef\\nghi")' -> ['',"\"abc\\ndef\\nghi\""] -> SUCCESS
-TEST: '(pr-str "abc\\\\def\\\\ghi")' -> ['',"\"abc\\\\def\\\\ghi\""] -> SUCCESS
-TEST: '(pr-str (list))' -> ['',"()"] -> SUCCESS
-Testing str
-TEST: '(str)' -> ['',""] -> SUCCESS
-TEST: '(str "")' -> ['',""] -> SUCCESS
-TEST: '(str "abc")' -> ['',"abc"] -> SUCCESS
-TEST: '(str "\\"")' -> ['',"\""] -> SUCCESS
-TEST: '(str 1 "abc" 3)' -> ['',"1abc3"] -> SUCCESS
-TEST: '(str "abc  def" "ghi jkl")' -> ['',"abc  defghi jkl"] -> SUCCESS
-TEST: '(str "abc\\ndef\\nghi")' -> ['',"abc\ndef\nghi"] -> SUCCESS
-TEST: '(str "abc\\\\def\\\\ghi")' -> ['',"abc\\def\\ghi"] -> SUCCESS
-TEST: '(str (list 1 2 "abc" "\\"") "def")' -> ['',"(1 2 abc \")def"] -> SUCCESS
-TEST: '(str (list))' -> ['',"()"] -> SUCCESS
-Testing prn
-TEST: '(prn)' -> ['\n',nil] -> SUCCESS
-TEST: '(prn "")' -> ['""\n',nil] -> SUCCESS
-TEST: '(prn "abc")' -> ['"abc"\n',nil] -> SUCCESS
-TEST: '(prn "abc  def" "ghi jkl")' -> ['"abc  def" "ghi jkl"',] -> SUCCESS
-TEST: '(prn "\\"")' -> ['"\\\\""\n',nil] -> SUCCESS
-TEST: '(prn "abc\\ndef\\nghi")' -> ['"abc\\\\ndef\\\\nghi"\n',nil] -> SUCCESS
-TEST: '(prn "abc\\\\def\\\\ghi")' -> ['"abc\\\\\\\\def\\\\\\\\ghi"',] -> SUCCESS
-TEST: 'nil' -> ['',] -> SUCCESS (result ignored)
-TEST: '(prn (list 1 2 "abc" "\\"") "def")' -> ['\\(1 2 "abc" "\\\\""\\) "def"\n',nil] -> SUCCESS
-Testing println
-TEST: '(println)' -> ['\n',nil] -> SUCCESS
-TEST: '(println "")' -> ['\n',nil] -> SUCCESS
-TEST: '(println "abc")' -> ['abc\n',nil] -> SUCCESS
-TEST: '(println "abc  def" "ghi jkl")' -> ['abc  def ghi jkl',] -> SUCCESS
-TEST: '(println "\\"")' -> ['"\n',nil] -> SUCCESS
-TEST: '(println "abc\\ndef\\nghi")' -> ['abc\ndef\nghi\n',nil] -> SUCCESS
-TEST: '(println "abc\\\\def\\\\ghi")' -> ['abc\\\\def\\\\ghi\n',nil] -> SUCCESS
-TEST: '(println (list 1 2 "abc" "\\"") "def")' -> ['\\(1 2 abc "\\) def\n',nil] -> SUCCESS
-Testing keywords
-TEST: '(= :abc :abc)' -> ['',true] -> SUCCESS
-TEST: '(= :abc :def)' -> ['',false] -> SUCCESS
-TEST: '(= :abc ":abc")' -> ['',false] -> SUCCESS
-TEST: '(= (list :abc) (list :abc))' -> ['',true] -> SUCCESS
-Testing vector truthiness
-TEST: '(if [] 7 8)' -> ['',7] -> SUCCESS
-Testing vector printing
-TEST: '(pr-str [1 2 "abc" "\\""] "def")' -> ['',"[1 2 \"abc\" \"\\\"\"] \"def\""] -> SUCCESS
-TEST: '(pr-str [])' -> ['',"[]"] -> SUCCESS
-TEST: '(str [1 2 "abc" "\\""] "def")' -> ['',"[1 2 abc \"]def"] -> SUCCESS
-TEST: '(str [])' -> ['',"[]"] -> SUCCESS
-Testing vector functions
-TEST: '(count [1 2 3])' -> ['',3] -> SUCCESS
-TEST: '(empty? [1 2 3])' -> ['',false] -> SUCCESS
-TEST: '(empty? [])' -> ['',true] -> SUCCESS
-TEST: '(list? [4 5 6])' -> ['',false] -> SUCCESS
-Testing vector equality
-TEST: '(= [] (list))' -> ['',true] -> SUCCESS
-TEST: '(= [7 8] [7 8])' -> ['',true] -> SUCCESS
-TEST: '(= [:abc] [:abc])' -> ['',true] -> SUCCESS
-TEST: '(= (list 1 2) [1 2])' -> ['',true] -> SUCCESS
-TEST: '(= (list 1) [])' -> ['',false] -> SUCCESS
-TEST: '(= [] [1])' -> ['',false] -> SUCCESS
-TEST: '(= 0 [])' -> ['',false] -> SUCCESS
-TEST: '(= [] 0)' -> ['',false] -> SUCCESS
-TEST: '(= [] "")' -> ['',false] -> SUCCESS
-TEST: '(= "" [])' -> ['',false] -> SUCCESS
-Testing vector parameter lists
-TEST: '( (fn* [] 4) )' -> ['',4] -> SUCCESS
-TEST: '( (fn* [f x] (f x)) (fn* [a] (+ 1 a)) 7)' -> ['',8] -> SUCCESS
-Nested vector/list equality
-TEST: '(= [(list)] (list []))' -> ['',true] -> SUCCESS
-TEST: '(= [1 2 (list 3 4 [5 6])] (list 1 2 [3 4 (list 5 6)]))' -> ['',true] -> SUCCESS
+Testing reading of large files
+TEST: '(load-file "../tests/computations.mal")' -> ['',nil] -> SUCCESS
+TEST: '(sumdown 2)' -> ['',3] -> SUCCESS
+TEST: '(fib 2)' -> ['',1] -> SUCCESS
+Testing `@` reader macro (short for `deref`)
+TEST: '(def! atm (atom 9))' -> ['',] -> SUCCESS (result ignored)
+TEST: '@atm' -> ['',9] -> SUCCESS
+Testing that vector params not broken by TCO
+TEST: '(def! g (fn* [] 78))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(g)' -> ['',78] -> SUCCESS
+TEST: '(def! g (fn* [a] (+ a 78)))' -> ['',] -> SUCCESS (result ignored)
+TEST: '(g 3)' -> ['',81] -> SUCCESS
 
-TEST RESULTS (for ../tests/step4_if_fn_do.mal):
+Testing that *ARGV* exists and is an empty list
+TEST: '(list? *ARGV*)' -> ['',true] -> SUCCESS
+TEST: '*ARGV*' -> ['',()] -> SUCCESS
+
+Testing that eval sets aa in root scope, and that it is found in nested scope
+TEST: '(let* (b 12) (do (eval (read-string "(def! aa 7)")) aa ))' -> ['',7] -> SUCCESS
+
+-------- Optional Functionality --------
+Testing comments in a file
+TEST: '(load-file "../tests/incB.mal")' -> ['',nil] -> SUCCESS
+TEST: '(inc4 7)' -> ['',11] -> SUCCESS
+TEST: '(inc5 7)' -> ['',12] -> SUCCESS
+Testing map literal across multiple lines in a file
+TEST: '(load-file "../tests/incC.mal")' -> ['',nil] -> SUCCESS
+TEST: 'mymap' -> ['',{"a" 1}] -> SUCCESS
+Checking that eval does not use local environments.
+TEST: '(def! a 1)' -> ['',1] -> SUCCESS
+TEST: '(let* (a 2) (eval (read-string "a")))' -> ['',1] -> SUCCESS
+Non alphanumeric characters in comments in read-string
+TEST: '(read-string "1;!")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;\\"")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;#")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;$")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;%")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;\'")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;\\\\")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;\\\\\\\\")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;\\\\\\\\\\\\")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1;`")' -> ['',1] -> SUCCESS
+TEST: '(read-string "1; &()*+,-./:;<=>?@[]^_{|}~")' -> ['',1] -> SUCCESS
+
+TEST RESULTS (for ../tests/step6_file.mal):
     0: soft failing tests
     0: failing tests
-  178: passing tests
-  178: total tests
+   65: passing tests
+   65: total tests
+
+----------------------------------------------
+Testing ARGV of test^python3^step6; step file: impls/python3/step6_file.py
+Running: env STEP=step6_file MAL_IMPL=js ../tests/run_argv_test.sh ../python3/run 
+Passed all *ARGV* tests
 

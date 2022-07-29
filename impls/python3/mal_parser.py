@@ -10,8 +10,7 @@ See: https://en.wikipedia.org/wiki/Recursive_descent_parser
 # Top-level Function
 import re
 
-from mal_types import MalType, MalDict, MalSeq, mal_seq, MalStr, MalSym, MalNil, MalBool, MalInt, MalKeyword, MalList, \
-    mk_list, mk_symbol
+from mal_types import *
 
 q_word = {
     "'": mk_symbol("quote"),
@@ -24,6 +23,7 @@ q_word = {
 
 
 def load_mal_string(s: str) -> (MalType, int):
+    s = remove_comments(s)
     i = skip_leading_whitespace(s, 0)
     assert i < len(s), 'string cannot be emtpy or blank'
 
@@ -33,6 +33,29 @@ def load_mal_string(s: str) -> (MalType, int):
         return ast
     except IndexError:
         raise_invalid_mal_error('Unexpected end of input:', s, len(s))
+
+
+def remove_comments(s: str) -> str:
+    semicolon = ';'
+    non_semicolon = '\u029e'
+
+    def semicolon_repl(match_obj):
+        return match_obj.group(0).replace(semicolon, non_semicolon)
+
+    s = re.sub(r'(?<=")(.*)(?:;+)(.*)(?=")', semicolon_repl, s)
+    t = ""
+    a = 0
+    b = 0
+    while b < len(s):
+        b = s.find(';', a)
+        if b < 0:
+            b = len(s)
+        t += s[a:b]
+        a = s.find('\n', b)
+        if a < 0:
+            a = len(s)
+    t = t.replace(non_semicolon, semicolon)
+    return t
 
 
 # Parsing MAL and Translating it to Python
@@ -261,12 +284,7 @@ def tests():
         }
     }"""
     strings = [
-        # "( + 1 2 )",
-        # 'nil',
-        # '( + 2 (* 3 4) )',
-        # test1
-        'a',
-        '(+ a b)'
+        '(read-string "7 ;; comment")'
     ]
 
     for t in strings:
@@ -277,5 +295,25 @@ def tests():
     print('Tests pass!')
 
 
+def t_comments():
+    src = """
+;;; TODO: really a step5 test
+;;
+;; Testing that (do (do)) not broken by TCO
+(do (do 1 2))
+;=>2
+
+;;
+;; Testing read-string, eval and slurp
+(read-string "(1 2 (3 4) nil)")
+;=>(1 2 (3 4) nil)
+
+(= nil (read-string "nil"))
+;=>true
+"""
+    print(remove_comments(src))
+
+
 if __name__ == '__main__':
     tests()
+    # t_comments()
