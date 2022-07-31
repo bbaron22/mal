@@ -59,8 +59,7 @@ def EVAL(ast: MalType, env) -> MalType:
             ast = fact if types.is_truthy(in_fact) else fiction
         elif ast[0] == 'fn*':
             a1, a2 = ast[1], ast[2]
-            fn = lambda *a: EVAL(ast[2], Env(outer=env, binds=ast[1], exprs=a))
-            return MalFunction(ast=a2, params=a1, env=env, fn=fn)
+            return MalFunction(EVAL=EVAL, ast=a2, env=env, params=a1)
         else:
             args = eval_ast(ast, env)
             f = args[0]
@@ -81,6 +80,7 @@ def init_env() -> Env:
     env = Env()
     for k, v in core.ns.items():
         env.set(types.mk_symbol(k), v)
+    rep("(def! not (fn* (a) (if a false true)))", env)
     return env
 
 
@@ -90,7 +90,6 @@ def rep(s, env):
 
 def main():
     repl_env = init_env()
-    rep("(def! not (fn* (a) (if a false true)))", repl_env)
     while True:
         # noinspection PyBroadException
         try:
