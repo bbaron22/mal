@@ -13,11 +13,12 @@ class MalFunction1:
 
 
 class MalFunction:
-    def __init__(self, EVAL, ast, env, params):
+    def __init__(self, EVAL, ast, env, params, is_macro=False):
         self.EVAL = EVAL
         self.ast = ast
         self.env = env
-        self.params = params
+        self.params = params,
+        self.is_macro = is_macro
 
     def __call__(self, *args, **kwargs):
         return self.EVAL(self.ast, Env(self.env, self.params, MalList(args)))
