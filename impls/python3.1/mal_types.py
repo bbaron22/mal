@@ -124,8 +124,8 @@ def is_falsey(obj) -> bool:
     return obj is None or obj is False
 
 
-def mk_dict():
-    return dict()
+def mk_dict(*args):
+    return dict(args)
 
 
 def count(obj):
