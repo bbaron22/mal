@@ -1,3 +1,5 @@
+import sys
+import traceback
 from operator import add, sub, mul, truediv
 
 import mal_readline
@@ -90,21 +92,12 @@ def main():
             if line == "":
                 continue
             print(rep(line))
-        except Exception as e:
-            print(e)
-            # print("".join(traceback.format_exception(*sys.exc_info())))
+        except Exception:
+            print("".join(traceback.format_exception(*sys.exc_info())))
 
 
 def t():
-    lines = [
-        '(def! a 6)',
-        'a',
-        '(def! b (+ a 2))',
-        '(+ a b)',
-        '(let* (c 2) c)'
-    ]
-    for line in lines:
-        print(rep(line))
+    print(rep('(+ 1 2)'))
 
 
 if __name__ == '__main__':

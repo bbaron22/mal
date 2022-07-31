@@ -21,7 +21,16 @@ class MalVector(list):
         return MalVector(super().__add__(x))
 
 
-MalList = list
+class MalList(list):
+
+    def __getitem__(self, i):
+        if type(i) == slice:
+            return MalList(super().__getitem__(i))
+        return super().__getitem__(i)
+
+    def __add__(self, x):
+        return MalList(super().__add__(x))
+
 
 MalInt = int
 
@@ -38,7 +47,7 @@ MalType = Union[
 
 
 def is_seq(obj):
-    return isinstance(obj, list)
+    return is_vector(obj) or is_list(obj)
 
 
 def is_vector(obj):
@@ -46,7 +55,7 @@ def is_vector(obj):
 
 
 def is_list(obj):
-    return is_seq(obj) and not is_vector(obj)
+    return isinstance(obj, MalList)
 
 
 def is_empty(obj):
@@ -82,7 +91,7 @@ def mk_nil():
 
 
 def mk_list(*args):
-    return list(args)
+    return MalList(args)
 
 
 def mk_string(s):
@@ -92,6 +101,8 @@ def mk_string(s):
 
 
 def mk_symbol(s):
+    if is_symbol(s):
+        return s
     return MalSym(s)
 
 
